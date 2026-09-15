@@ -14,25 +14,62 @@ npm start
 
 | ファイル | 内容 |
 |---|---|
-| `index.html` | ホーム画面（目標・今日の予定・勉強履歴の表示） |
-| `goal.html` | 目標設定画面（日次目標・予定To-Doの登録） |
-| `timer.html` | タイマー画面（カウントアップ／カウントダウン、全画面表示対応） |
+| `index.html` | ホーム画面。今日の目標一覧・今日の勉強予定・勉強履歴を表示し、各画面への入口となる |
+| `goal.html` | 目標設定画面。日付ごとに「今日は〇P〜〇Pまで」形式の目標を複数追加・個別削除でき、勉強予定(To-Do)も管理する |
+| `timer.html` | タイマー画面。カウントアップ／カウントダウン両対応、全画面表示対応 |
+| `record.html` | 勉強記録の手動追加画面。タイマーを使わずに日付・科目・学習時間・メモを記録できる |
+
+## 主な機能
+
+- **目標設定**: 日付を指定して「開始〜終了」形式の目標を複数登録可能。開始・終了が未入力のまま追加しようとすると入力を促す。個別に削除可能
+- **勉強予定 (To-Do)**: 箇条書き形式で予定を登録し、ホーム画面からチェックのオン/オフが可能（時間指定でのカレンダー管理は今後の拡張予定）
+- **タイマー**: カウントアップ／カウントダウンを切り替え可能。稼働中は開始ボタンが無効化され、操作できないことが視覚的にわかる。全画面表示に対応し、停止時に記録するかどうかを選択できる
+- **勉強履歴**:
+  - タイマー停止時に「記録する」を選んだ場合に自動で記録される（`source: "timer"`）
+  - `record.html` から手動でも記録を追加できる（`source: "manual"`）
+  - ホーム画面の履歴一覧では、記録元が「タイマー」「手動」のタグで区別して表示される
+- **データのエクスポート／インポート**: ホーム画面からJSON形式で書き出し・読み込みが可能。書き出し時は確認ダイアログを表示し、OKした場合のみダウンロードを開始する
 
 ## データ保存
 
-すべてのデータはブラウザの `localStorage` に保存されます。ホーム画面から他デバイス・他ユーザーとの共有用にJSON形式でのエクスポート／インポートが可能です。
+すべてのデータはブラウザの `localStorage` に保存されます（サーバー・DBは使用しません）。他デバイス・他ユーザーとの共有が必要な場合は、ホーム画面のJSON書き出し／読み込み機能を利用してください。
+
+### データ構造の概要
+
+```js
+// 勉強履歴: studies_records
+[
+  {
+    id, date, subject, duration, // 秒単位
+    memo, source,                // "timer" | "manual"
+    createdAt
+  }
+]
+
+// 目標: studies_goal（日付ごとに複数の目標を配列で保持）
+{
+  "2026-09-15": [
+    { id, rangeStart, rangeEnd, memo }
+  ]
+}
+
+// 勉強予定(To-Do): studies_schedule
+[
+  { id, date, content, done }
+]
+```
 
 ## ディレクトリ構成
 
 ```
 studies/
-├── index.html / goal.html / timer.html
+├── index.html / goal.html / timer.html / record.html
 ├── css/
-│   ├── common.css   共通デザイントークン・ベーススタイル
-│   ├── index.css / goal.css / timer.css
+│   ├── common.css              共通デザイントークン・ベーススタイル
+│   ├── index.css / goal.css / timer.css / record.css
 ├── js/
-│   ├── common.js    localStorage操作・共通ユーティリティ
-│   ├── index.js / goal.js / timer.js
-├── server.js        Node標準httpモジュールのみで動く静的配信サーバー
+│   ├── common.js                localStorage操作・共通ユーティリティ
+│   ├── index.js / goal.js / timer.js / record.js
+├── server.js                    Node標準httpモジュールのみで動く静的配信サーバー
 └── package.json
 ```
