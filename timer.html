@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>タイマー | STUDIES</title>
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/timer.css">
+</head>
+<body class="timer-body">
+
+<nav class="topnav">
+  <a class="topnav__brand" href="index.html">STUDI<span>E</span>S</a>
+  <div class="topnav__links">
+    <a href="index.html">ホーム</a>
+    <a href="goal.html">目標設定</a>
+    <a href="timer.html" class="is-active">タイマー</a>
+  </div>
+</nav>
+
+<main class="timer-page" id="timer-page">
+
+  <!-- モード切り替え -->
+  <div class="mode-switch" id="mode-switch">
+    <button class="mode-switch__btn is-active" data-mode="countup">カウントアップ</button>
+    <button class="mode-switch__btn" data-mode="countdown">カウントダウン</button>
+  </div>
+
+  <!-- カウントダウン時間設定 -->
+  <div class="duration-setting" id="duration-setting" hidden>
+    <div class="duration-setting__field">
+      <input type="number" id="set-hours" min="0" max="23" value="0">
+      <label>時間</label>
+    </div>
+    <div class="duration-setting__field">
+      <input type="number" id="set-minutes" min="0" max="59" value="25">
+      <label>分</label>
+    </div>
+    <div class="duration-setting__field">
+      <input type="number" id="set-seconds" min="0" max="59" value="0">
+      <label>秒</label>
+    </div>
+  </div>
+
+  <!-- タイマー表示 -->
+  <div class="timer-display" id="timer-display">00:00</div>
+
+  <!-- コントロール -->
+  <div class="timer-controls">
+    <button class="btn btn--primary btn--large" id="btn-start">開始</button>
+    <button class="btn btn--large" id="btn-pause" hidden>一時停止</button>
+    <button class="btn btn--large" id="btn-stop" hidden>停止</button>
+    <button class="btn btn--ghost" id="btn-fullscreen">全画面表示</button>
+  </div>
+
+</main>
+
+<!-- 記録保存モーダル -->
+<div class="modal-overlay" id="save-modal" hidden>
+  <div class="modal">
+    <h3>この勉強を記録しますか？</h3>
+    <p class="modal__duration" id="modal-duration"></p>
+    <div class="field">
+      <label for="record-subject">科目名</label>
+      <input type="text" id="record-subject" placeholder="例: 数学">
+    </div>
+    <div class="field">
+      <label for="record-memo">メモ（任意）</label>
+      <input type="text" id="record-memo" placeholder="例: 二次関数の演習">
+    </div>
+    <div class="btn-row">
+      <button class="btn btn--primary" id="btn-save-record">記録する</button>
+      <button class="btn btn--ghost" id="btn-discard-record">記録しない</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/common.js"></script>
+<script src="js/timer.js"></script>
+</body>
+</html>

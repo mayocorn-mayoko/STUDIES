@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>記録を追加 | STUDIES</title>
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/record.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="topnav__brand" href="index.html">STUDI<span>E</span>S</a>
+  <div class="topnav__links">
+    <a href="index.html">ホーム</a>
+    <a href="goal.html">目標設定</a>
+    <a href="timer.html">タイマー</a>
+  </div>
+</nav>
+
+<main class="page">
+
+  <section class="section">
+    <h2 class="section__title section__title--green">勉強記録を手動で追加</h2>
+    <p class="empty-state" style="border:none; padding-left:0;">
+      タイマーを使わずに、後から勉強内容を記録したい場合はこちらから追加できます。
+    </p>
+
+    <form id="manual-record-form">
+      <div class="field-row">
+        <div class="field">
+          <label for="manual-date">日付</label>
+          <input type="date" id="manual-date">
+        </div>
+        <div class="field">
+          <label for="manual-subject">科目名</label>
+          <input type="text" id="manual-subject" placeholder="例: 数学">
+        </div>
+      </div>
+      <div class="field">
+        <label>学習時間</label>
+        <div class="duration-inline">
+          <input type="number" id="manual-hours" min="0" max="23" value="0" aria-label="時間">
+          <span>時間</span>
+          <input type="number" id="manual-minutes" min="0" max="59" value="0" aria-label="分">
+          <span>分</span>
+          <input type="number" id="manual-seconds" min="0" max="59" value="0" aria-label="秒">
+          <span>秒</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="manual-memo">メモ（任意）</label>
+        <input type="text" id="manual-memo" placeholder="例: 二次関数の演習">
+      </div>
+      <div class="btn-row">
+        <button type="submit" class="btn btn--primary">記録を追加</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="section" style="border-bottom:none;">
+    <a class="btn" href="index.html">ホームに戻る（履歴を確認する）</a>
+  </section>
+
+</main>
+
+<script src="js/common.js"></script>
+<script src="js/record.js"></script>
+</body>
+</html>

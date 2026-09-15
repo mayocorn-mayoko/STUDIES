@@ -1,0 +1,10 @@
+{
+  "name": "studies",
+  "version": "0.1.0",
+  "description": "学習の可視化・管理アプリ STUDIES",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "ISC"
+}

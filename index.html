@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>STUDIES</title>
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="topnav__brand" href="index.html">STUDI<span>E</span>S</a>
+  <div class="topnav__links">
+    <a href="index.html" class="is-active">ホーム</a>
+    <a href="goal.html">目標設定</a>
+    <a href="timer.html">タイマー</a>
+  </div>
+</nav>
+
+<main class="page">
+
+  <!-- 今日の目標 -->
+  <section class="section">
+    <h2 class="section__title">今日の目標</h2>
+    <ul class="list" id="goal-list"></ul>
+    <p class="empty-state" id="goal-empty" hidden>今日の目標はまだ設定されていません。<a href="goal.html" style="color:var(--color-accent);">目標を設定する →</a></p>
+  </section>
+
+  <!-- 今日の勉強予定 -->
+  <section class="section">
+    <h2 class="section__title">今日の勉強予定</h2>
+    <ul class="list" id="schedule-list"></ul>
+    <p class="empty-state" id="schedule-empty" hidden>予定はまだありません。目標設定画面から追加できます。</p>
+  </section>
+
+  <!-- 勉強履歴 -->
+  <section class="section">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: var(--space-3);">
+      <h2 class="section__title section__title--green">勉強履歴</h2>
+      <div class="btn-row">
+        <button class="btn btn--small" id="btn-export">JSON書き出し</button>
+        <label class="btn btn--small" style="margin:0;">
+          読み込み
+          <input type="file" id="input-import" accept="application/json" hidden>
+        </label>
+      </div>
+    </div>
+    <p class="empty-state" style="border:none; padding-left:0; margin-top:0;">
+      <a href="record.html" style="color:var(--color-accent);">記録を手動で追加する →</a>
+    </p>
+    <ul class="list" id="history-list"></ul>
+    <p class="empty-state" id="history-empty" hidden>まだ記録がありません。タイマー画面、または上のリンクから記録してみましょう。</p>
+  </section>
+
+  <!-- 画面遷移 -->
+  <section class="section" style="border-bottom:none;">
+    <div class="btn-row">
+      <a class="btn btn--primary" href="timer.html">タイマーを開始する</a>
+      <a class="btn" href="goal.html">目標・予定を編集する</a>
+    </div>
+  </section>
+
+</main>
+
+<script src="js/common.js"></script>
+<script src="js/index.js"></script>
+</body>
+</html>

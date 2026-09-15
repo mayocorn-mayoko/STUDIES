@@ -1,0 +1,21 @@
+/* ============================================================
+   record.css - 記録追加ページ固有スタイル
+   ============================================================ */
+
+.duration-inline {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+
+.duration-inline input {
+  width: 64px;
+  text-align: center;
+}
+
+.duration-inline span {
+  font-size: 13px;
+  color: var(--color-text-dim);
+  margin-right: var(--space-2);
+}
