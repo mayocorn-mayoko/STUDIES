@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>データを見る | STUDIES</title>
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/viewer.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="topnav__brand" href="index.html">STUDI<span>E</span>S</a>
+  <div class="topnav__links">
+    <a href="index.html">ホーム</a>
+    <a href="goal.html">目標設定</a>
+    <a href="timer.html">タイマー</a>
+  </div>
+</nav>
+
+<main class="page">
+
+  <section class="section">
+    <h2 class="section__title">他の人のデータを見る</h2>
+    <p class="empty-state" style="border:none; padding-left:0;">
+      STUDIESからエクスポートされたJSONファイルを選択すると、この画面にのみ内容を表示します。<br>
+      ここで読み込んだ内容はあなたの端末には保存されず、あなた自身の目標・予定・履歴と混ざることはありません。
+    </p>
+    <div class="field" style="max-width:360px;">
+      <label for="viewer-file">JSONファイルを選択</label>
+      <input type="file" id="viewer-file" accept="application/json">
+    </div>
+    <p class="empty-state" id="viewer-error" hidden style="border-left-color: var(--color-danger); color: var(--color-danger);"></p>
+  </section>
+
+  <div id="viewer-content" hidden>
+
+    <section class="section">
+      <div class="viewer-meta" id="viewer-meta"></div>
+    </section>
+
+    <section class="section">
+      <h2 class="section__title">目標</h2>
+      <div id="viewer-goals"></div>
+      <p class="empty-state" id="viewer-goals-empty" hidden>目標データはありません。</p>
+    </section>
+
+    <section class="section">
+      <h2 class="section__title section__title--green">勉強予定 (To-Do)</h2>
+      <ul class="list" id="viewer-schedule"></ul>
+      <p class="empty-state" id="viewer-schedule-empty" hidden>予定データはありません。</p>
+    </section>
+
+    <section class="section" style="border-bottom:none;">
+      <h2 class="section__title section__title--green">勉強履歴</h2>
+      <ul class="list" id="viewer-history"></ul>
+      <p class="empty-state" id="viewer-history-empty" hidden>履歴データはありません。</p>
+    </section>
+
+  </div>
+
+</main>
+
+<script src="js/common.js"></script>
+<script src="js/viewer.js"></script>
+</body>
+</html>
