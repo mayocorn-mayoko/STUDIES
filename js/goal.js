@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('goal-form').addEventListener('submit', onSubmitGoal);
   document.getElementById('schedule-form').addEventListener('submit', onSubmitSchedule);
+  document.getElementById('btn-reset-all').addEventListener('click', onResetAllData);
 
   renderGoalList();
   renderSchedule();
@@ -70,9 +71,10 @@ function renderGoalList() {
   goals.forEach((goal) => {
     const li = document.createElement('li');
     li.className = 'list-item';
+    const importedTag = goal.imported ? '<span class="tag tag--imported">インポート</span> ' : '';
     li.innerHTML = `
       <div class="list-item__main">
-        <span class="list-item__title">${escapeHTML(goal.rangeStart)} 〜 ${escapeHTML(goal.rangeEnd)}</span>
+        <span class="list-item__title">${importedTag}${escapeHTML(goal.rangeStart)} 〜 ${escapeHTML(goal.rangeEnd)}</span>
         ${goal.memo ? `<span class="list-item__meta">${escapeHTML(goal.memo)}</span>` : ''}
       </div>
       <button class="btn btn--small btn--danger" data-id="${goal.id}">削除</button>
@@ -116,10 +118,11 @@ function renderSchedule() {
   items.forEach((item) => {
     const li = document.createElement('li');
     li.className = 'list-item schedule-item' + (item.done ? ' is-done' : '');
+    const importedTag = item.imported ? '<span class="tag tag--imported">インポート</span>' : '';
     li.innerHTML = `
       <div class="list-item__left">
         <span class="checkbox ${item.done ? 'is-checked' : ''}"></span>
-        <span class="list-item__title">${escapeHTML(item.content)}</span>
+        <span class="list-item__title">${importedTag} ${escapeHTML(item.content)}</span>
       </div>
       <button class="btn btn--small btn--danger" data-id="${item.id}">削除</button>
     `;
@@ -134,6 +137,19 @@ function renderSchedule() {
     });
     listEl.appendChild(li);
   });
+}
+
+/* ---------- データ全リセット ---------- */
+
+function onResetAllData() {
+  const ok = confirm('すべての目標・勉強予定・勉強履歴を削除します。この操作は元に戻せません。本当に削除しますか？');
+  if (!ok) return;
+
+  resetAllData();
+  alert('すべてのデータを削除しました。');
+
+  renderGoalList();
+  renderSchedule();
 }
 
 /* ---------- ユーティリティ ---------- */

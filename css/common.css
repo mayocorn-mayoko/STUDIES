@@ -17,6 +17,7 @@
   --color-accent-dim: #b9812f;
   --color-green: #4fa490;
   --color-danger: #d9685f;
+  --color-info: #6c93c7;
 
   /* --- Type --- */
   --font-display: 'Fraunces', serif;
@@ -300,8 +301,25 @@ select:focus {
   display: inline-block;
   padding: 2px 8px;
   font-size: 11px;
+  font-family: var(--font-body);
   border: 1px solid var(--color-green);
   color: var(--color-green);
+}
+
+/* タグの種類ごとの色分け(全画面共通) */
+.tag--timer {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.tag--manual {
+  border-color: var(--color-text-dim);
+  color: var(--color-text-dim);
+}
+
+.tag--imported {
+  border-color: var(--color-info);
+  color: var(--color-info);
 }
 
 /* Focus visibility for accessibility */

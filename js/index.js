@@ -27,10 +27,11 @@ function renderGoal() {
   goals.forEach((goal) => {
     const li = document.createElement('li');
     li.className = 'list-item';
+    const importedTag = goal.imported ? '<span class="tag tag--imported">インポート</span> ' : '';
     li.innerHTML = `
       <div class="list-item__main">
         <span class="list-item__title" style="font-family:var(--font-display); font-size:16px;">
-          ${escapeHTML(goal.rangeStart)} 〜 ${escapeHTML(goal.rangeEnd)}
+          ${importedTag}${escapeHTML(goal.rangeStart)} 〜 ${escapeHTML(goal.rangeEnd)}
         </span>
         ${goal.memo ? `<span class="list-item__meta">${escapeHTML(goal.memo)}</span>` : ''}
       </div>
@@ -57,10 +58,11 @@ function renderSchedule() {
   items.forEach((item) => {
     const li = document.createElement('li');
     li.className = 'list-item schedule-item' + (item.done ? ' is-done' : '');
+    const importedTag = item.imported ? '<span class="tag tag--imported">インポート</span>' : '';
     li.innerHTML = `
       <div class="list-item__left">
         <span class="checkbox ${item.done ? 'is-checked' : ''}"></span>
-        <span class="list-item__title">${escapeHTML(item.content)}</span>
+        <span class="list-item__title">${importedTag} ${escapeHTML(item.content)}</span>
       </div>
     `;
     li.addEventListener('click', () => {
@@ -92,9 +94,10 @@ function renderHistory() {
     const sourceTag = r.source === 'timer'
       ? '<span class="tag tag--timer">タイマー</span>'
       : '<span class="tag tag--manual">手動</span>';
+    const importedTag = r.imported ? '<span class="tag tag--imported">インポート</span>' : '';
     li.innerHTML = `
       <div class="list-item__main">
-        <span class="list-item__title">${sourceTag} ${escapeHTML(r.subject)} ${r.memo ? '- ' + escapeHTML(r.memo) : ''}</span>
+        <span class="list-item__title">${sourceTag}${importedTag} ${escapeHTML(r.subject)} ${r.memo ? '- ' + escapeHTML(r.memo) : ''}</span>
         <span class="list-item__meta">${formatDateJP(r.date)} ・ ${formatDuration(r.duration)}</span>
       </div>
       <button class="btn btn--small btn--danger" data-id="${r.id}">削除</button>
@@ -109,21 +112,15 @@ function renderHistory() {
   });
 }
 
-/* ---------- エクスポート / インポート ---------- */
+/* ---------- インポート ---------- */
 
 function setupExportImport() {
-  document.getElementById('btn-export').addEventListener('click', () => {
-    const ok = confirm('学習記録・目標・予定をJSONファイルとして書き出します。よろしいですか？');
-    if (!ok) return;
-    exportAllData();
-  });
-
   document.getElementById('input-import').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (!file) return;
     importAllData(file, (success) => {
       if (success) {
-        alert('データを読み込みました。');
+        alert('データを読み込みました。既存のデータに追加され、「インポート」タグが付いた状態で表示されます。');
         renderGoal();
         renderSchedule();
         renderHistory();

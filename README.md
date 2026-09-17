@@ -18,6 +18,8 @@ npm start
 | `goal.html` | 目標設定画面。日付ごとに「今日は〇P〜〇Pまで」形式の目標を複数追加・個別削除でき、勉強予定(To-Do)も管理する |
 | `timer.html` | タイマー画面。カウントアップ／カウントダウン両対応、全画面表示対応 |
 | `record.html` | 勉強記録の手動追加画面。タイマーを使わずに日付・科目・学習時間・メモを記録できる |
+| `export.html` | 書き出し設定画面。日付範囲と含める項目(目標／勉強予定／履歴)を指定してJSONを書き出す |
+| `viewer.html` | 他人のエクスポートファイル(JSON)を読み込んで表示専用で閲覧する画面。**この端末のlocalStorageには一切保存されず、自分のデータと混ざらない** |
 
 ## 主な機能
 
@@ -28,11 +30,16 @@ npm start
   - タイマー停止時に「記録する」を選んだ場合に自動で記録される（`source: "timer"`）
   - `record.html` から手動でも記録を追加できる（`source: "manual"`）
   - ホーム画面の履歴一覧では、記録元が「タイマー」「手動」のタグで区別して表示される
-- **データのエクスポート／インポート**: ホーム画面からJSON形式で書き出し・読み込みが可能。書き出し時は確認ダイアログを表示し、OKした場合のみダウンロードを開始する
+- **データのエクスポート／インポート**:
+  - ホーム画面の「書き出し」リンクから`export.html`に遷移し、**日付範囲**と**含める項目(目標／勉強予定／履歴)**を指定してJSONを書き出せる。書き出し前には確認ダイアログを表示し、OKした場合のみダウンロードを開始する
+  - インポートは既存データを上書きせず**マージ**され、取り込んだ目標・予定・履歴には`imported: true`が付与される。画面上では「インポート」タグで区別して表示される
+- **タグの見た目統一**: 「タイマー」「手動」「インポート」の各タグは`common.css`で一元定義しており、フォント・色はどの画面でも共通
+- **データの全リセット**: 目標設定画面(`goal.html`)から、目標・勉強予定・勉強履歴をすべて削除できる。確認ダイアログでOKした場合のみ実行される破壊的操作のため、実行前にホーム画面の「書き出し」でバックアップすることを推奨
+- **他人のデータの閲覧 (`viewer.html`)**: 他人からもらったエクスポートJSONファイルを、自分のlocalStorageに保存せずその場で表示だけ行う専用画面。自分の目標・予定・履歴と混ざる心配がない
 
 ## データ保存
 
-すべてのデータはブラウザの `localStorage` に保存されます（サーバー・DBは使用しません）。他デバイス・他ユーザーとの共有が必要な場合は、ホーム画面のJSON書き出し／読み込み機能を利用してください。
+すべてのデータはブラウザの `localStorage` に保存されます（サーバー・DBは使用しません）。他デバイス・他ユーザーとの共有が必要な場合は、ホーム画面のJSON書き出し／読み込み機能を利用してください。他人のデータを自分のものと混ぜずに一時的に見たいだけの場合は `viewer.html` を利用してください（この画面はlocalStorageを一切使用しません）。
 
 ### データ構造の概要
 
@@ -42,6 +49,7 @@ npm start
   {
     id, date, subject, duration, // 秒単位
     memo, source,                // "timer" | "manual"
+    imported,                    // true の場合、インポートで取り込まれたデータ(未設定 = 自分で記録したデータ)
     createdAt
   }
 ]
@@ -49,27 +57,33 @@ npm start
 // 目標: studies_goal（日付ごとに複数の目標を配列で保持）
 {
   "2026-09-15": [
-    { id, rangeStart, rangeEnd, memo }
+    { id, rangeStart, rangeEnd, memo, imported }
   ]
 }
 
 // 勉強予定(To-Do): studies_schedule
 [
-  { id, date, content, done }
+  { id, date, content, done, imported }
 ]
 ```
+
+`imported`フィールドは、JSONインポート機能で取り込まれた項目にのみ付与されます（自分で入力した項目には存在しません）。
 
 ## ディレクトリ構成
 
 ```
 studies/
-├── index.html / goal.html / timer.html / record.html
+├── index.html / goal.html / timer.html / record.html / export.html / viewer.html
 ├── css/
-│   ├── common.css              共通デザイントークン・ベーススタイル
-│   ├── index.css / goal.css / timer.css / record.css
+│   ├── common.css              共通デザイントークン・ベーススタイル・タグの色/フォント定義
+│   ├── index.css / goal.css / timer.css / record.css / export.css / viewer.css
 ├── js/
-│   ├── common.js                localStorage操作・共通ユーティリティ
-│   ├── index.js / goal.js / timer.js / record.js
+│   ├── common.js                localStorage操作・共通ユーティリティ・書き出しフィルタリング処理
+│   ├── index.js / goal.js / timer.js / record.js / export.js / viewer.js
 ├── server.js                    Node標準httpモジュールのみで動く静的配信サーバー
 └── package.json
 ```
+
+## 開発ルール
+
+- ファイルを更新した場合は、同じタイミングでこのREADMEも実態に合わせて更新すること。

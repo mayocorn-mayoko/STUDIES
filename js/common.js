@@ -196,21 +196,73 @@ function getScheduleByDate(date) {
 }
 
 /* ============================================================
+   全データリセット
+   目標・予定・履歴をすべて削除する(元に戻せない破壊的操作)
+   ============================================================ */
+
+function resetAllData() {
+  localStorage.removeItem(STORAGE_KEYS.RECORDS);
+  localStorage.removeItem(STORAGE_KEYS.GOAL);
+  localStorage.removeItem(STORAGE_KEYS.SCHEDULE);
+}
+
+/* ============================================================
    データのエクスポート / インポート (JSON)
    ============================================================ */
 
 function exportAllData() {
+  exportFilteredData({
+    startDate: null,
+    endDate: null,
+    includeGoals: true,
+    includeSchedule: true,
+    includeRecords: true,
+  });
+}
+
+// 日付文字列(YYYY-MM-DD)がstart〜endの範囲内かを判定する(いずれかがnull/空なら制限なし)
+function isDateInRange(date, startDate, endDate) {
+  if (startDate && date < startDate) return false;
+  if (endDate && date > endDate) return false;
+  return true;
+}
+
+// 指定した日付範囲・出力項目に絞ってJSONを書き出す
+function exportFilteredData({ startDate, endDate, includeGoals, includeSchedule, includeRecords }) {
   const data = {
-    records: getRecords(),
-    goals: getAllGoals(),
-    schedule: getSchedule(),
     exportedAt: new Date().toISOString(),
+    records: [],
+    goals: {},
+    schedule: [],
   };
+
+  if (includeRecords) {
+    data.records = getRecords().filter((r) => isDateInRange(r.date, startDate, endDate));
+  }
+
+  if (includeGoals) {
+    const allGoals = getAllGoals();
+    Object.keys(allGoals).forEach((date) => {
+      if (isDateInRange(date, startDate, endDate)) {
+        data.goals[date] = allGoals[date];
+      }
+    });
+  }
+
+  if (includeSchedule) {
+    data.schedule = getSchedule().filter((s) => isDateInRange(s.date, startDate, endDate));
+  }
+
+  downloadJSON(data, `studies_backup_${getTodayString()}.json`);
+}
+
+// JSONオブジェクトをファイルとしてダウンロードさせる共通処理
+function downloadJSON(data, filename) {
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `studies_backup_${getTodayString()}.json`;
+  a.download = filename;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
@@ -218,18 +270,71 @@ function exportAllData() {
 }
 
 // fileInputのchangeイベント等から呼び出す想定
+// 既存データを上書きせず、末尾にマージする。取り込んだ項目には imported:true を付与して区別する。
 function importAllData(file, onComplete) {
   const reader = new FileReader();
   reader.onload = (e) => {
     try {
       const data = JSON.parse(e.target.result);
-      if (data.records) saveRecords(data.records);
-      if (data.goals) writeStorage(STORAGE_KEYS.GOAL, data.goals);
-      if (data.schedule) saveSchedule(data.schedule);
+
+      if (Array.isArray(data.records)) {
+        const existing = getRecords();
+        const incoming = data.records.map((r) => ({
+          ...r,
+          id: generateId(), // 既存データとのID重複を避けるため採番し直す
+          imported: true,
+        }));
+        saveRecords(existing.concat(incoming));
+      }
+
+      if (data.goals && typeof data.goals === 'object') {
+        const existingGoals = getAllGoals();
+        Object.keys(data.goals).forEach((date) => {
+          const incomingList = Array.isArray(data.goals[date]) ? data.goals[date] : [];
+          const taggedIncoming = incomingList.map((g) => ({
+            ...g,
+            id: generateId(),
+            imported: true,
+          }));
+          const currentList = Array.isArray(existingGoals[date]) ? existingGoals[date] : [];
+          existingGoals[date] = currentList.concat(taggedIncoming);
+        });
+        writeStorage(STORAGE_KEYS.GOAL, existingGoals);
+      }
+
+      if (Array.isArray(data.schedule)) {
+        const existingSchedule = getSchedule();
+        const incomingSchedule = data.schedule.map((s) => ({
+          ...s,
+          id: generateId(),
+          imported: true,
+        }));
+        saveSchedule(existingSchedule.concat(incomingSchedule));
+      }
+
       if (onComplete) onComplete(true, null);
     } catch (err) {
       console.error('Import error:', err);
       if (onComplete) onComplete(false, err);
+    }
+  };
+  reader.readAsText(file);
+}
+
+/* ============================================================
+   外部JSONファイルの読み込み専用(localStorageには一切保存しない)
+   他人のエクスポートデータを自分のデータと混ぜずに閲覧するための関数
+   ============================================================ */
+
+function readExternalFile(file, onComplete) {
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (onComplete) onComplete(true, data, null);
+    } catch (err) {
+      console.error('External file read error:', err);
+      if (onComplete) onComplete(false, null, err);
     }
   };
   reader.readAsText(file);

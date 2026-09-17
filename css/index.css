@@ -50,13 +50,3 @@
   align-items: center;
   gap: var(--space-3);
 }
-
-.tag--timer {
-  border-color: var(--color-accent);
-  color: var(--color-accent);
-}
-
-.tag--manual {
-  border-color: var(--color-text-dim);
-  color: var(--color-text-dim);
-}

@@ -1,0 +1,21 @@
+/* ============================================================
+   viewer.css - 他人データ閲覧ページ固有スタイル
+   ============================================================ */
+
+.viewer-meta {
+  font-size: 13px;
+  color: var(--color-text-dim);
+  border-left: 2px solid var(--color-info);
+  padding-left: var(--space-3);
+}
+
+.viewer-date-group {
+  margin-bottom: var(--space-3);
+}
+
+.viewer-date-group__label {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-text-dim);
+  margin-bottom: var(--space-2);
+}
