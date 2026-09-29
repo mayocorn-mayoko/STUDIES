@@ -1,0 +1,33 @@
+/* ============================================================
+   guide.css - 使い方ページ固有スタイル
+   ============================================================ */
+
+#home ul,
+#goal ul,
+#timer ul,
+#viewer ul,
+#import ul,
+#export ul {
+  margin: var(--space-2) 0;
+  padding-left: 1.4em;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+#home ul ul,
+#goal ul ul {
+  margin-top: var(--space-1);
+}
+
+.section p {
+  color: var(--color-text);
+}
+
+.section a {
+  color: var(--color-accent);
+}
+
+.section a:hover {
+  text-decoration: underline;
+}

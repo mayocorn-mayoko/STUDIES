@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>使い方 | STUDIES</title>
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/guide.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="topnav__brand" href="index.html">STUDI<span>E</span>S</a>
+  <div class="topnav__links">
+    <a href="index.html">ホーム</a>
+    <a href="goal.html">目標設定</a>
+    <a href="timer.html">タイマー</a>
+    <a href="guide.html" class="is-active">使い方</a>
+  </div>
+</nav>
+
+<main class="page">
+
+  <section class="section">
+    <h2 class="section__title">STUDIESとは</h2>
+    <p>
+      STUDIESは、自分の勉強を「見える化」して管理するためのシンプルなアプリです。
+      今日の目標を決め、タイマーで勉強時間を計測し、その記録を履歴として積み上げていくことができます。
+      すべてのデータはこの端末のブラウザ内だけに保存され、外部のサーバーには一切送信されません。
+    </p>
+  </section>
+
+  <!-- 目次 -->
+  <section class="section">
+    <h2 class="section__title section__title--green">目次</h2>
+    <ul class="list">
+      <li class="list-item"><a href="#home">① ホーム画面</a></li>
+      <li class="list-item"><a href="#goal">② 目標設定画面</a></li>
+      <li class="list-item"><a href="#timer">③ タイマー画面</a></li>
+      <li class="list-item"><a href="#record">④ 記録を手動で追加</a></li>
+      <li class="list-item"><a href="#export">⑤ データの書き出し</a></li>
+      <li class="list-item"><a href="#import">⑥ データの読み込み(インポート)</a></li>
+      <li class="list-item"><a href="#viewer">⑦ 他の人のデータを見る</a></li>
+      <li class="list-item"><a href="#reset">⑧ データを全て消したいとき</a></li>
+      <li class="list-item"><a href="#storage">⑨ データの保存場所について</a></li>
+    </ul>
+  </section>
+
+  <!-- ホーム画面 -->
+  <section class="section" id="home">
+    <h2 class="section__title">① ホーム画面</h2>
+    <p>アプリを開いたときに最初に表示される画面です。次の3つが一覧できます。</p>
+    <ul>
+      <li><strong>今日の目標</strong>: 目標設定画面で登録した、今日の目標が表示されます。</li>
+      <li><strong>今日の勉強予定</strong>: To-Do形式の予定が表示され、クリックすると完了/未完了を切り替えられます。</li>
+      <li><strong>勉強履歴</strong>: これまでに記録した勉強の一覧です。タイマーで記録したものには<span class="tag tag--timer">タイマー</span>、手動で追加したものには<span class="tag tag--manual">手動</span>、他のファイルから読み込んだものには<span class="tag tag--imported">インポート</span>のタグが付き、一目で区別できます。</li>
+    </ul>
+    <p>画面上部のメニューから、目標設定・タイマー・使い方の各画面にいつでも移動できます。「STUDIES」のロゴをクリックすると、どの画面からでもホームに戻れます。</p>
+  </section>
+
+  <!-- 目標設定画面 -->
+  <section class="section" id="goal">
+    <h2 class="section__title">② 目標設定画面</h2>
+    <p>日付ごとに目標と勉強予定を管理する画面です。</p>
+    <ul>
+      <li><strong>対象の日付</strong>: 上部で日付を選ぶと、その日の目標・予定を確認/編集できます（初期状態では今日の日付）。</li>
+      <li><strong>目標の追加</strong>: 「開始」と「終了」の欄に、たとえば問題集のページ範囲などを入力して追加します。
+        <ul>
+          <li>「開始」は必須ですが、「終了」は空欄のままでも登録できます。終了を入力しなかった場合は、開始の内容だけが表示されます（例: 「P10」のみ）。</li>
+        </ul>
+      </li>
+      <li><strong>目標は複数登録可能</strong>: 1日に複数の目標を追加でき、一覧の「削除」ボタンから個別に削除できます。</li>
+      <li><strong>勉強予定(To-Do)</strong>: テキストを入力して「追加」を押すと、箇条書きの予定として登録されます。ホーム画面や本画面の一覧から完了チェック・削除が行えます。</li>
+    </ul>
+  </section>
+
+  <!-- タイマー画面 -->
+  <section class="section" id="timer">
+    <h2 class="section__title">③ タイマー画面</h2>
+    <p>勉強時間を計測するための画面です。</p>
+    <ul>
+      <li><strong>モード切り替え</strong>: 「カウントアップ(経過時間を計る)」と「カウントダウン(設定した時間から減っていく)」を切り替えられます。カウントダウンを選ぶと、時・分・秒を入力する欄が表示されます。</li>
+      <li><strong>開始・一時停止・停止</strong>: 「開始」を押すと計測が始まります。稼働中は開始ボタンが暗く表示され、操作できない状態であることがひと目でわかります。「一時停止」で計測を止めて「開始」(このときは「再開」の表示になります)で続きから再開できます。</li>
+      <li><strong>全画面表示</strong>: 「全画面表示」ボタンで、タイマーだけを大きく表示できます。</li>
+      <li><strong>記録の保存</strong>: 「停止」を押すと、その回の勉強を記録として保存するかどうかを確認する画面が出ます。科目名とメモを入力して「記録する」を押すと、勉強履歴に追加されます（記録しない場合は「記録しない」を押してください）。</li>
+    </ul>
+  </section>
+
+  <!-- 手動記録 -->
+  <section class="section" id="record">
+    <h2 class="section__title">④ 記録を手動で追加</h2>
+    <p>
+      タイマーを使わずに勉強した内容を、あとからまとめて記録したいときに使う画面です。
+      ホーム画面の「勉強履歴」欄にある「記録を手動で追加する →」のリンクから移動できます。
+      日付・科目名・学習時間(時/分/秒)・メモを入力して追加すると、ホーム画面の履歴に反映されます（<span class="tag tag--manual">手動</span>タグが付きます）。
+    </p>
+  </section>
+
+  <!-- 書き出し -->
+  <section class="section" id="export">
+    <h2 class="section__title">⑤ データの書き出し</h2>
+    <p>
+      ホーム画面の「書き出し」から、記録をJSONファイルとしてダウンロードできます。他の端末に移したり、バックアップを取っておいたりするのに使えます。
+    </p>
+    <ul>
+      <li><strong>日付の範囲</strong>: 開始日・終了日を指定すると、その期間のデータだけを書き出せます。空欄のままにすると期間の制限はありません。</li>
+      <li><strong>含める項目</strong>: 「目標」「勉強予定」「勉強履歴」のうち、書き出したいものだけを選べます。</li>
+      <li>内容を確認する画面が表示されるので、問題なければ「OK」を押すとダウンロードが始まります。</li>
+    </ul>
+  </section>
+
+  <!-- インポート -->
+  <section class="section" id="import">
+    <h2 class="section__title">⑥ データの読み込み(インポート)</h2>
+    <p>
+      ホーム画面の「読み込み」から、書き出しておいたJSONファイルを選ぶと、その内容がこの端末に取り込まれます。
+    </p>
+    <ul>
+      <li>読み込んだデータは、今あるデータを上書きするのではなく<strong>追加(マージ)</strong>されます。既存の記録が消えることはありません。</li>
+      <li>取り込まれた目標・予定・履歴には<span class="tag tag--imported">インポート</span>タグが自動で付き、自分で入力したものと区別できます。</li>
+    </ul>
+  </section>
+
+  <!-- viewer -->
+  <section class="section" id="viewer">
+    <h2 class="section__title">⑦ 他の人のデータを見る</h2>
+    <p>
+      友人など他の人から共有されたJSONファイルを、自分の記録と混ぜずに見たいときは「他の人のデータを見る」画面を使ってください。ホーム画面からリンクで移動できます。
+    </p>
+    <p>
+      この画面で読み込んだ内容は表示されるだけで、<strong>この端末には一切保存されません</strong>。ページを閉じたり別のファイルを選び直したりすれば表示内容は消え、自分自身の目標・予定・履歴には何の影響もありません。
+    </p>
+  </section>
+
+  <!-- reset -->
+  <section class="section" id="reset">
+    <h2 class="section__title">⑧ データを全て消したいとき</h2>
+    <p>
+      目標設定画面の下部にある「データを全てリセットする」ボタンから、目標・勉強予定・勉強履歴をまとめて削除できます。
+      押すと確認のダイアログが表示され、そこで「OK」を選んだ場合のみ削除が実行されます（誤操作防止のため、確認なしでは削除されません）。
+    </p>
+    <p class="empty-state" style="border-left-color: var(--color-danger); color: var(--color-danger);">
+      この操作は元に戻せません。必要なデータがある場合は、実行前に「書き出し」でバックアップを取っておくことを強くおすすめします。
+    </p>
+  </section>
+
+  <!-- storage -->
+  <section class="section" id="storage" style="border-bottom:none;">
+    <h2 class="section__title">⑨ データの保存場所について</h2>
+    <p>
+      STUDIESのデータは、サーバーやクラウドではなく、<strong>今使っているブラウザ内(localStorage)</strong>にのみ保存されます。そのため次の点にご注意ください。
+    </p>
+    <ul>
+      <li>別のパソコン・スマートフォン・ブラウザからは、同じデータを見ることはできません。他の端末と共有したい場合は「書き出し」→「読み込み」を利用してください。</li>
+      <li>ブラウザの閲覧データ(キャッシュ・サイトデータなど)を削除すると、STUDIESの記録も消えてしまいます。大事な記録は定期的に書き出してバックアップしておくと安心です。</li>
+    </ul>
+  </section>
+
+</main>
+
+</body>
+</html>
