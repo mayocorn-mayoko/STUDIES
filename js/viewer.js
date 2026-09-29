@@ -76,9 +76,12 @@ function renderViewerGoals(goalsObj) {
       const li = document.createElement('li');
       li.className = 'list-item';
       const importedTag = goal.imported ? '<span class="tag tag--imported">インポート</span> ' : '';
+      const rangeText = goal.rangeEnd
+        ? `${escapeHTML(goal.rangeStart || '?')} 〜 ${escapeHTML(goal.rangeEnd)}`
+        : escapeHTML(goal.rangeStart || '?');
       li.innerHTML = `
         <div class="list-item__main">
-          <span class="list-item__title">${importedTag}${escapeHTML(goal.rangeStart || '?')} 〜 ${escapeHTML(goal.rangeEnd || '?')}</span>
+          <span class="list-item__title">${importedTag}${rangeText}</span>
           ${goal.memo ? `<span class="list-item__meta">${escapeHTML(goal.memo)}</span>` : ''}
         </div>
       `;

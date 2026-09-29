@@ -28,10 +28,13 @@ function renderGoal() {
     const li = document.createElement('li');
     li.className = 'list-item';
     const importedTag = goal.imported ? '<span class="tag tag--imported">インポート</span> ' : '';
+    const rangeText = goal.rangeEnd
+      ? `${escapeHTML(goal.rangeStart)} 〜 ${escapeHTML(goal.rangeEnd)}`
+      : escapeHTML(goal.rangeStart);
     li.innerHTML = `
       <div class="list-item__main">
         <span class="list-item__title" style="font-family:var(--font-display); font-size:16px;">
-          ${importedTag}${escapeHTML(goal.rangeStart)} 〜 ${escapeHTML(goal.rangeEnd)}
+          ${importedTag}${rangeText}
         </span>
         ${goal.memo ? `<span class="list-item__meta">${escapeHTML(goal.memo)}</span>` : ''}
       </div>

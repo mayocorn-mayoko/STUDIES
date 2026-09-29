@@ -33,19 +33,12 @@ function onSubmitGoal(e) {
   const rangeEnd = rangeEndInput.value.trim();
   const memo = document.getElementById('goal-memo').value.trim();
 
-  // 空欄チェック: 開始・終了は必須。空の場合はブラウザの入力要求UIで知らせる
+  // 空欄チェック: 開始のみ必須。終了は空欄でもよい
   if (!rangeStart) {
     rangeStartInput.setCustomValidity('開始位置を入力してください。');
     rangeStartInput.reportValidity();
     rangeStartInput.setCustomValidity('');
     rangeStartInput.focus();
-    return;
-  }
-  if (!rangeEnd) {
-    rangeEndInput.setCustomValidity('終了位置を入力してください。');
-    rangeEndInput.reportValidity();
-    rangeEndInput.setCustomValidity('');
-    rangeEndInput.focus();
     return;
   }
 
@@ -72,9 +65,12 @@ function renderGoalList() {
     const li = document.createElement('li');
     li.className = 'list-item';
     const importedTag = goal.imported ? '<span class="tag tag--imported">インポート</span> ' : '';
+    const rangeText = goal.rangeEnd
+      ? `${escapeHTML(goal.rangeStart)} 〜 ${escapeHTML(goal.rangeEnd)}`
+      : escapeHTML(goal.rangeStart);
     li.innerHTML = `
       <div class="list-item__main">
-        <span class="list-item__title">${importedTag}${escapeHTML(goal.rangeStart)} 〜 ${escapeHTML(goal.rangeEnd)}</span>
+        <span class="list-item__title">${importedTag}${rangeText}</span>
         ${goal.memo ? `<span class="list-item__meta">${escapeHTML(goal.memo)}</span>` : ''}
       </div>
       <button class="btn btn--small btn--danger" data-id="${goal.id}">削除</button>
