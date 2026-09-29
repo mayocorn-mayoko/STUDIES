@@ -20,10 +20,11 @@ npm start
 | `record.html` | 勉強記録の手動追加画面。タイマーを使わずに日付・科目・学習時間・メモを記録できる |
 | `export.html` | 書き出し設定画面。日付範囲と含める項目(目標／勉強予定／履歴)を指定してJSONを書き出す |
 | `viewer.html` | 他人のエクスポートファイル(JSON)を読み込んで表示専用で閲覧する画面。**この端末のlocalStorageには一切保存されず、自分のデータと混ざらない** |
+| `guide.html` | STUDIESの使い方を説明するページ |
 
 ## 主な機能
 
-- **目標設定**: 日付を指定して「開始〜終了」形式の目標を複数登録可能。開始・終了が未入力のまま追加しようとすると入力を促す。個別に削除可能
+- **目標設定**: 日付を指定して「開始〜終了」形式の目標を複数登録可能。「開始」は必須だが「終了」は任意で、未入力の場合は開始の内容のみが表示される(「〜」は付かない)。開始が未入力のまま追加しようとすると入力を促す。個別に削除可能
 - **勉強予定 (To-Do)**: 箇条書き形式で予定を登録し、ホーム画面からチェックのオン/オフが可能（時間指定でのカレンダー管理は今後の拡張予定）
 - **タイマー**: カウントアップ／カウントダウンを切り替え可能。稼働中は開始ボタンが無効化され、操作できないことが視覚的にわかる。全画面表示に対応し、停止時に記録するかどうかを選択できる
 - **勉強履歴**:
@@ -73,10 +74,10 @@ npm start
 
 ```
 studies/
-├── index.html / goal.html / timer.html / record.html / export.html / viewer.html
+├── index.html / goal.html / timer.html / record.html / export.html / viewer.html / guide.html
 ├── css/
 │   ├── common.css              共通デザイントークン・ベーススタイル・タグの色/フォント定義
-│   ├── index.css / goal.css / timer.css / record.css / export.css / viewer.css
+│   ├── index.css / goal.css / timer.css / record.css / export.css / viewer.css / guide.css
 ├── js/
 │   ├── common.js                localStorage操作・共通ユーティリティ・書き出しフィルタリング処理
 │   ├── index.js / goal.js / timer.js / record.js / export.js / viewer.js
@@ -84,6 +85,3 @@ studies/
 └── package.json
 ```
 
-## 開発ルール
-
-- ファイルを更新した場合は、同じタイミングでこのREADMEも実態に合わせて更新すること。
