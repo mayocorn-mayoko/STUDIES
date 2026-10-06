@@ -6,9 +6,16 @@ let mode = 'countup';            // 'countup' | 'countdown'
 let state = 'idle';              // 'idle' | 'running' | 'paused'
 let intervalId = null;
 
-let elapsedSeconds = 0;         // カウントアップ用: 経過秒数
-let countdownTotal = 0;         // カウントダウン用: 設定した合計秒数
-let remainingSeconds = 0;       // カウントダウン用: 残り秒数
+let countdownTotal = 0;          // カウントダウン用: 設定した合計秒数
+
+// 経過時間は「tickのたびに+1する」のではなく、実時刻の差分から都度計算する。
+// setIntervalはタブが非アクティブ/ウィンドウが非フォーカスのとき、ブラウザによって
+// 間引かれる(スロットリングされる)ことがあるため、tick回数を数えると実際の経過時間より
+// 短く記録されてしまう。segmentStartTime(開始/再開した実時刻)と、それ以前にすでに
+// 確定している秒数(accumulatedSeconds)から毎回計算し直すことで、間引かれても
+// 次にtickが呼ばれた時点で正しい経過時間に追いつく。
+let segmentStartTime = null;     // 現在の稼働区間の開始時刻(ms, Date.now())。稼働中でなければnull
+let accumulatedSeconds = 0;      // 過去の稼働区間(一時停止前まで)で確定した経過秒数
 
 let finishedDuration = 0;       // 停止時に記録する学習時間(秒)
 
@@ -47,6 +54,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   elBtnSaveRecord.addEventListener('click', onSaveRecord);
   elBtnDiscardRecord.addEventListener('click', onDiscardRecord);
+
+  // タブ/ウィンドウが再びアクティブになった瞬間に、間引かれていた表示を即座に正しい値へ追いつかせる
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && state === 'running') {
+      tick();
+    }
+  });
 });
 
 /* ---------- モード切り替え ---------- */
@@ -66,6 +80,15 @@ function setMode(newMode) {
 
 /* ---------- タイマー制御 ---------- */
 
+// 現在の経過秒数を実時刻から計算する(稼働中でなければ確定済みの秒数をそのまま返す)
+function getElapsedSeconds() {
+  if (state !== 'running' || segmentStartTime === null) {
+    return accumulatedSeconds;
+  }
+  const sinceSegmentStart = Math.floor((Date.now() - segmentStartTime) / 1000);
+  return accumulatedSeconds + sinceSegmentStart;
+}
+
 function startOrResume() {
   // 稼働中の連打によるinterval多重生成を防止
   if (state === 'running') return;
@@ -80,13 +103,12 @@ function startOrResume() {
         alert('カウントダウンの時間を設定してください。');
         return;
       }
-      remainingSeconds = countdownTotal;
-    } else {
-      elapsedSeconds = 0;
     }
+    accumulatedSeconds = 0;
   }
-  // state === 'paused' の場合はelapsed/remainingを維持したまま再開する
+  // state === 'paused' の場合はaccumulatedSecondsを維持したまま再開する
 
+  segmentStartTime = Date.now();
   disableModeSwitch(true);
   setState('running');
 
@@ -98,6 +120,8 @@ function startOrResume() {
 
 function pauseTimer() {
   if (state !== 'running') return;
+  accumulatedSeconds = getElapsedSeconds(); // ここまでの経過秒数を確定させる
+  segmentStartTime = null;
   clearInterval(intervalId);
   intervalId = null;
   setState('paused');
@@ -105,10 +129,12 @@ function pauseTimer() {
 
 function stopTimer() {
   if (state === 'idle') return;
+  const elapsed = getElapsedSeconds();
   clearInterval(intervalId);
   intervalId = null;
+  segmentStartTime = null;
 
-  finishedDuration = mode === 'countup' ? elapsedSeconds : (countdownTotal - remainingSeconds);
+  finishedDuration = mode === 'countup' ? elapsed : Math.min(countdownTotal, elapsed);
 
   setState('idle');
   disableModeSwitch(false);
@@ -116,31 +142,31 @@ function stopTimer() {
 }
 
 function tick() {
-  if (mode === 'countup') {
-    elapsedSeconds += 1;
-  } else {
-    remainingSeconds -= 1;
-    if (remainingSeconds <= 0) {
-      remainingSeconds = 0;
-      updateDisplay();
-      finishedDuration = countdownTotal;
-      clearInterval(intervalId);
-      intervalId = null;
-      setState('idle');
-      disableModeSwitch(false);
-      notifyCountdownEnd();
-      openSaveModal();
-      return;
-    }
+  const elapsed = getElapsedSeconds();
+
+  if (mode === 'countdown' && elapsed >= countdownTotal) {
+    // タブが非アクティブな間に時間切れを迎えていた場合もここで検知できる
+    accumulatedSeconds = countdownTotal;
+    segmentStartTime = null;
+    finishedDuration = countdownTotal;
+    clearInterval(intervalId);
+    intervalId = null;
+    setState('idle');
+    disableModeSwitch(false);
+    updateDisplay();
+    notifyCountdownEnd();
+    openSaveModal();
+    return;
   }
+
   updateDisplay();
 }
 
 function resetTimerState() {
   clearInterval(intervalId);
   intervalId = null;
-  elapsedSeconds = 0;
-  remainingSeconds = 0;
+  segmentStartTime = null;
+  accumulatedSeconds = 0;
   countdownTotal = 0;
   setState('idle');
 }
@@ -148,14 +174,15 @@ function resetTimerState() {
 /* ---------- 表示更新 ---------- */
 
 function updateDisplay() {
-  const seconds = mode === 'countup' ? elapsedSeconds : remainingSeconds;
+  const elapsed = getElapsedSeconds();
+  const seconds = mode === 'countup' ? elapsed : Math.max(0, countdownTotal - elapsed);
   elDisplay.textContent = formatDuration(seconds);
 
   elDisplay.classList.remove('is-warning', 'is-danger');
   if (mode === 'countdown' && state === 'running') {
-    if (remainingSeconds <= 10) {
+    if (seconds <= 10) {
       elDisplay.classList.add('is-danger');
-    } else if (remainingSeconds <= 60) {
+    } else if (seconds <= 60) {
       elDisplay.classList.add('is-warning');
     }
   }
