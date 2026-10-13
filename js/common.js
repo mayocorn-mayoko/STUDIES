@@ -5,8 +5,8 @@
 
 const STORAGE_KEYS = {
   RECORDS: 'studies_records',   // 勉強履歴
-  GOAL: 'studies_goal',         // 今日の目標(日付ごとに1件)
-  SCHEDULE: 'studies_schedule', // 今日の予定(To-Doリスト)
+  GOAL: 'studies_goal',         // 目標(日付ごとに複数件)
+  SCHEDULE: 'studies_schedule', // 予定(To-Doリスト)
 };
 
 /* ---------- 基本ユーティリティ ---------- */
@@ -99,11 +99,6 @@ function addRecord({ date, subject, duration, memo, source }) {
 function deleteRecord(id) {
   const records = getRecords().filter((r) => r.id !== id);
   saveRecords(records);
-}
-
-// 日付指定で履歴を取得(省略時は全件)
-function getRecordsByDate(date) {
-  return getRecords().filter((r) => r.date === date);
 }
 
 /* ============================================================
@@ -209,16 +204,6 @@ function resetAllData() {
 /* ============================================================
    データのエクスポート / インポート (JSON)
    ============================================================ */
-
-function exportAllData() {
-  exportFilteredData({
-    startDate: null,
-    endDate: null,
-    includeGoals: true,
-    includeSchedule: true,
-    includeRecords: true,
-  });
-}
 
 // 日付文字列(YYYY-MM-DD)がstart〜endの範囲内かを判定する(いずれかがnull/空なら制限なし)
 function isDateInRange(date, startDate, endDate) {
