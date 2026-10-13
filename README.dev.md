@@ -90,11 +90,11 @@ type ScheduleItem = {
 - `getTodayString()`: `YYYY-MM-DD`
 - `formatDuration(seconds)`: `H:MM:SS`(1時間以上) / `MM:SS`
 - `readStorage(key, fallback)` / `writeStorage(key, value)`: JSON.parse/stringifyのラッパー。例外時は`fallback`を返す
-- 履歴: `getRecords` / `saveRecords` / `addRecord` / `deleteRecord` / `getRecordsByDate`
+- 履歴: `getRecords` / `saveRecords` / `addRecord` / `deleteRecord`
 - 目標: `getAllGoals` / `getGoalsByDate` / `saveGoalsByDate` / `addGoal` / `deleteGoal` / `getTodayGoals`
 - 予定: `getSchedule` / `saveSchedule` / `addScheduleItem` / `toggleScheduleItem` / `deleteScheduleItem` / `getScheduleByDate`
 - 全削除: `resetAllData()` — 3つのストレージキーを`removeItem`
-- 書き出し: `exportFilteredData({ startDate, endDate, includeGoals, includeSchedule, includeRecords })` / `downloadJSON(data, filename)` / `exportAllData()`(フィルタなしの全件書き出し、後方互換用ラッパー) / `isDateInRange(date, start, end)`
+- 書き出し: `exportFilteredData({ startDate, endDate, includeGoals, includeSchedule, includeRecords })` / `downloadJSON(data, filename)` / `isDateInRange(date, start, end)`
 - 読み込み(自分のデータへ統合): `importAllData(file, onComplete)` — 既存データを**上書きせず追加**。取り込んだ全項目のidを`generateId()`で再採番し、`imported: true`を付与してから既存配列/オブジェクトにconcat/マージする
 - 読み込み(表示専用・保存なし): `readExternalFile(file, onComplete)` — `viewer.html`専用。パース結果をコールバックに渡すのみで、いかなるstorageへの書き込みも行わない
 
@@ -163,3 +163,8 @@ function getElapsedSeconds() {
 ## 動作確認の方法
 
 ブラウザ自動化ツールがない環境でのロジック検証は、`js/common.js`・`js/timer.js`等をNode上で`eval`し、`document`/`localStorage`/`setInterval`等を最小限のモックに差し替えて行う(過去のセッションで実施)。`let`/`const`のトップレベル宣言は`eval`のスコープに閉じ込められるため、動作確認用に読み込む際は`var`に置換してから`eval`する必要がある点に注意。
+
+## コーディング規約
+
+- コメントは機能説明に留める最低限の量とする(処理の意図が自明でない箇所のみ、1〜2行程度)
+- 未使用になった関数・CSSクラス・CSS変数・HTML属性は都度削除する(2026-10-13に`getRecordsByDate`・`exportAllData`・`.goal-card`系クラス・`--color-panel-raised`・`id="schedule-note"`を削除済み)
