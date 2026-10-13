@@ -113,7 +113,7 @@ function getElapsedSeconds() {
 }
 ```
 
-理由: `setInterval`はバックグラウンドタブ/非フォーカスウィンドウでブラウザにスロットリングされる(Chromeは特に強く間引く)。tick回数ベースだと間引かれた分だけ実経過時間より少なく記録されるバグがあった(2026-10-06修正)。wall-clock差分方式ならtickが間引かれても、次に呼ばれた時点で正しい値に自動的に追いつく。
+理由: `setInterval`はバックグラウンドタブ/非フォーカスウィンドウでブラウザにスロットリングされる(Chromeは特に強く間引く)ため、tick回数ベースでは間引かれた分だけ実経過時間より少なく記録されてしまう。wall-clock差分方式ならtickが間引かれても、次に呼ばれた時点で正しい値に自動的に追いつく。
 
 あわせて`visibilitychange`イベントで`!document.hidden && state === 'running'`の場合に`tick()`を直接呼び、タブ復帰時に即座に表示を最新化・カウントダウン終了判定を行う。
 
@@ -151,7 +151,7 @@ function getElapsedSeconds() {
 
 ## タグ表示の一元化
 
-`.tag--timer` / `.tag--manual` / `.tag--imported`は`common.css`で定義している。各ページで個別に再定義しないこと(過去に`index.css`/`goal.css`に重複定義され、`viewer.html`が未読み込みのため表示が崩れるバグがあった)。新しいタグ種別を追加する場合も`common.css`に追加する。
+`.tag--timer` / `.tag--manual` / `.tag--imported`は`common.css`で定義している。各ページのCSSで個別に再定義すると、そのスタイルを読み込んでいない別ページ(例: `viewer.html`)で表示が崩れるため、再定義せず`common.css`に一元化すること。新しいタグ種別を追加する場合も同様に`common.css`に追加する。
 
 ## 既知の制約・今後の拡張余地
 
@@ -162,9 +162,9 @@ function getElapsedSeconds() {
 
 ## 動作確認の方法
 
-ブラウザ自動化ツールがない環境でのロジック検証は、`js/common.js`・`js/timer.js`等をNode上で`eval`し、`document`/`localStorage`/`setInterval`等を最小限のモックに差し替えて行う(過去のセッションで実施)。`let`/`const`のトップレベル宣言は`eval`のスコープに閉じ込められるため、動作確認用に読み込む際は`var`に置換してから`eval`する必要がある点に注意。
+ブラウザ自動化ツールがない環境でのロジック検証は、`js/common.js`・`js/timer.js`等をNode上で`eval`し、`document`/`localStorage`/`setInterval`等を最小限のモックに差し替えて行う。`let`/`const`のトップレベル宣言は`eval`のスコープに閉じ込められるため、動作確認用に読み込む際は`var`に置換してから`eval`する必要がある点に注意。
 
 ## コーディング規約
 
 - コメントは機能説明に留める最低限の量とする(処理の意図が自明でない箇所のみ、1〜2行程度)
-- 未使用になった関数・CSSクラス・CSS変数・HTML属性は都度削除する(2026-10-13に`getRecordsByDate`・`exportAllData`・`.goal-card`系クラス・`--color-panel-raised`・`id="schedule-note"`を削除済み)
+- 未使用になった関数・CSSクラス・CSS変数・HTML属性は都度削除する
