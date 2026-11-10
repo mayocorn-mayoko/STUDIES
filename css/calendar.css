@@ -1,0 +1,133 @@
+/* ============================================================
+   calendar.css - カレンダー画面固有スタイル
+   ============================================================ */
+
+.cal-head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.cal-head__title {
+  flex: 1;
+  text-align: center;
+  font-size: 20px;
+}
+
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 2px;
+}
+
+.cal-weekdays {
+  margin-bottom: 2px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--color-text-dim);
+}
+
+.cal-weekdays div:first-child { color: var(--color-danger); }
+.cal-weekdays div:last-child { color: var(--color-info); }
+
+/* 日セル。背景の濃さが勉強時間(ヒートマップ) */
+.cal-cell {
+  min-height: 84px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+  color: var(--color-text);
+  background: var(--color-panel);
+  border: 1px solid transparent;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.cal-cell:hover { border-color: var(--color-border); }
+.cal-cell.is-other { opacity: 0.4; }
+.cal-cell.is-today .cal-cell__num { color: var(--color-accent); font-weight: 700; }
+.cal-cell.is-selected { border-color: var(--color-accent); }
+
+.cal-cell__num { font-size: 12px; font-family: var(--font-mono); }
+
+.cal-cell[data-heat="1"] { background: color-mix(in srgb, var(--color-green) 18%, var(--color-panel)); }
+.cal-cell[data-heat="2"] { background: color-mix(in srgb, var(--color-green) 34%, var(--color-panel)); }
+.cal-cell[data-heat="3"] { background: color-mix(in srgb, var(--color-green) 52%, var(--color-panel)); }
+.cal-cell[data-heat="4"] { background: color-mix(in srgb, var(--color-green) 72%, var(--color-panel)); }
+
+/* 予定チップ。種類ごとに背景色が変わる */
+.cal-chip {
+  display: block;
+  padding: 1px 4px;
+  font-size: 11px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 2px;
+  color: #fff;
+}
+
+.cal-chip--study { background: var(--color-info); }
+.cal-chip--exam { background: var(--color-danger); }
+.cal-chip--rest { background: var(--color-rest); }
+.cal-chip.is-done { opacity: 0.45; text-decoration: line-through; }
+.cal-more { font-size: 11px; color: var(--color-text-dim); }
+
+/* 凡例 */
+.cal-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+  font-size: 12px;
+  color: var(--color-text-dim);
+}
+
+.cal-legend__heat { margin-left: auto; display: inline-flex; align-items: center; gap: 3px; }
+
+.cal-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 4px;
+  border-radius: 2px;
+}
+
+.cal-dot--study { background: var(--color-info); }
+.cal-dot--exam { background: var(--color-danger); }
+.cal-dot--rest { background: var(--color-rest); }
+
+.cal-heat { display: inline-block; width: 12px; height: 12px; border-radius: 2px; background: var(--color-panel); border: 1px solid var(--color-border); }
+.cal-heat--1 { background: color-mix(in srgb, var(--color-green) 18%, var(--color-panel)); }
+.cal-heat--2 { background: color-mix(in srgb, var(--color-green) 34%, var(--color-panel)); }
+.cal-heat--3 { background: color-mix(in srgb, var(--color-green) 52%, var(--color-panel)); }
+.cal-heat--4 { background: color-mix(in srgb, var(--color-green) 72%, var(--color-panel)); }
+
+/* 選択日の詳細 */
+.cal-summary { margin: 0 0 var(--space-3); font-size: 14px; color: var(--color-text-dim); }
+
+.cal-sub {
+  margin: var(--space-4) 0 var(--space-2);
+  font-size: 15px;
+}
+
+.cal-sub__link {
+  margin-left: var(--space-2);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--color-accent);
+}
+
+.cal-form { margin-top: var(--space-3); }
+
+@media (max-width: 560px) {
+  .cal-cell { min-height: 64px; }
+  .cal-chip { font-size: 10px; padding: 0 2px; }
+  .cal-form .field-row { flex-wrap: wrap; }
+}

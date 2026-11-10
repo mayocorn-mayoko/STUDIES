@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>カレンダー | STUDIES</title>
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/calendar.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="topnav__brand" href="index.html">STUDI<span>E</span>S</a>
+  <div class="topnav__links">
+    <a href="index.html">ホーム</a>
+    <a href="calendar.html" class="is-active">カレンダー</a>
+    <a href="goal.html">目標設定</a>
+    <a href="timer.html">タイマー</a>
+    <a href="guide.html">使い方</a>
+  </div>
+</nav>
+
+<main class="page">
+
+  <section class="section">
+    <div class="cal-head">
+      <button type="button" class="btn btn--small" id="cal-prev" aria-label="前の月">‹</button>
+      <h2 class="cal-head__title" id="cal-title"></h2>
+      <button type="button" class="btn btn--small" id="cal-next" aria-label="次の月">›</button>
+      <button type="button" class="btn btn--small btn--ghost" id="cal-today">今日</button>
+    </div>
+
+    <div class="cal-grid cal-weekdays">
+      <div>日</div><div>月</div><div>火</div><div>水</div><div>木</div><div>金</div><div>土</div>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+
+    <div class="cal-legend">
+      <span><i class="cal-dot cal-dot--study"></i>勉強予定</span>
+      <span><i class="cal-dot cal-dot--exam"></i>試験・締切</span>
+      <span><i class="cal-dot cal-dot--rest"></i>休み・予備</span>
+      <span class="cal-legend__heat">勉強時間
+        <i class="cal-heat cal-heat--0"></i><i class="cal-heat cal-heat--1"></i><i class="cal-heat cal-heat--2"></i><i class="cal-heat cal-heat--3"></i><i class="cal-heat cal-heat--4"></i>
+        多い
+      </span>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section__title" id="day-title"></h2>
+    <p class="cal-summary" id="day-summary"></p>
+
+    <h3 class="cal-sub">予定</h3>
+    <ul class="list" id="day-schedule"></ul>
+    <p class="empty-state" id="day-schedule-empty" hidden>この日の予定はありません。</p>
+
+    <form id="event-form" class="cal-form">
+      <div class="field">
+        <label for="event-content">予定を追加</label>
+        <input type="text" id="event-content" placeholder="例: 英語長文 / 模試" autocomplete="off">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="event-type">種類</label>
+          <select id="event-type"></select>
+        </div>
+        <div class="field">
+          <label for="event-start">開始（任意）</label>
+          <input type="time" id="event-start">
+        </div>
+        <div class="field">
+          <label for="event-end">終了（任意）</label>
+          <input type="time" id="event-end">
+        </div>
+      </div>
+      <div class="btn-row">
+        <button type="submit" class="btn btn--primary">追加</button>
+      </div>
+    </form>
+
+    <h3 class="cal-sub">目標 <a class="cal-sub__link" id="day-goal-link" href="goal.html">編集する →</a></h3>
+    <ul class="list" id="day-goals"></ul>
+    <p class="empty-state" id="day-goals-empty" hidden>この日の目標はありません。</p>
+
+    <h3 class="cal-sub">勉強履歴</h3>
+    <ul class="list" id="day-records"></ul>
+    <p class="empty-state" id="day-records-empty" hidden>この日の記録はありません。</p>
+  </section>
+
+</main>
+
+<script src="js/common.js"></script>
+<script src="js/calendar.js"></script>
+</body>
+</html>
