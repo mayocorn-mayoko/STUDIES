@@ -17,6 +17,7 @@
   --color-green: #4fa490;
   --color-danger: #d9685f;
   --color-info: #6c93c7;
+  --color-rest: #7d86a6;
 
   /* --- Type --- */
   --font-display: 'Fraunces', serif;
@@ -217,6 +218,7 @@ label {
 input[type="text"],
 input[type="number"],
 input[type="date"],
+input[type="time"],
 textarea,
 select {
   width: 100%;
@@ -296,6 +298,36 @@ select:focus {
   color: var(--color-text-dim);
 }
 
+.schedule-item {
+  cursor: pointer;
+}
+
+.schedule-item.is-done .list-item__title {
+  color: var(--color-text-dim);
+  text-decoration: line-through;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--color-border);
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkbox.is-checked {
+  background: var(--color-green);
+  border-color: var(--color-green);
+}
+
+.list-item__left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
 .tag {
   display: inline-block;
   padding: 2px 8px;
@@ -319,6 +351,22 @@ select:focus {
 .tag--imported {
   border-color: var(--color-info);
   color: var(--color-info);
+}
+
+.tag--exam {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.tag--rest {
+  border-color: var(--color-rest);
+  color: var(--color-rest);
+}
+
+.schedule-time {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-dim);
 }
 
 /* Focus visibility for accessibility */
@@ -350,3 +398,12 @@ textarea:focus-visible {
     gap: 0;
   }
 }
+
+.countdown {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  color: var(--color-danger);
+  white-space: nowrap;
+}
+
+.section[hidden] { display: none; }

@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>STUDIES</title>
 <link rel="stylesheet" href="css/common.css">
-<link rel="stylesheet" href="css/index.css">
 </head>
 <body>
 
@@ -13,6 +12,7 @@
   <a class="topnav__brand" href="index.html">STUDI<span>E</span>S</a>
   <div class="topnav__links">
     <a href="index.html" class="is-active">ホーム</a>
+    <a href="calendar.html">カレンダー</a>
     <a href="goal.html">目標設定</a>
     <a href="timer.html">タイマー</a>
     <a href="guide.html">使い方</a>
@@ -33,6 +33,12 @@
     <h2 class="section__title">今日の勉強予定</h2>
     <ul class="list" id="schedule-list"></ul>
     <p class="empty-state" id="schedule-empty" hidden>予定はまだありません。目標設定画面から追加できます。</p>
+  </section>
+
+  <!-- 近い試験・締切 -->
+  <section class="section" id="upcoming-section" hidden>
+    <h2 class="section__title">近い試験・締切</h2>
+    <ul class="list" id="upcoming-list"></ul>
   </section>
 
   <!-- 勉強履歴 -->
@@ -59,6 +65,7 @@
   <section class="section" style="border-bottom:none;">
     <div class="btn-row">
       <a class="btn btn--primary" href="timer.html">タイマーを開始する</a>
+      <a class="btn" href="calendar.html">カレンダーを開く</a>
       <a class="btn" href="goal.html">目標・予定を編集する</a>
     </div>
   </section>

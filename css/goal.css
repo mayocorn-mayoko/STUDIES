@@ -5,33 +5,3 @@
 #schedule-form {
   flex-wrap: wrap;
 }
-
-.schedule-item {
-  cursor: pointer;
-}
-
-.schedule-item.is-done .list-item__title {
-  color: var(--color-text-dim);
-  text-decoration: line-through;
-}
-
-.checkbox {
-  width: 16px;
-  height: 16px;
-  border: 1px solid var(--color-border);
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.checkbox.is-checked {
-  background: var(--color-green);
-  border-color: var(--color-green);
-}
-
-.list-item__left {
-  display: flex;
-  align-items: center;
-  gap: var(--space-3);
-}

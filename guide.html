@@ -13,6 +13,7 @@
   <a class="topnav__brand" href="index.html">STUDI<span>E</span>S</a>
   <div class="topnav__links">
     <a href="index.html">ホーム</a>
+    <a href="calendar.html">カレンダー</a>
     <a href="goal.html">目標設定</a>
     <a href="timer.html">タイマー</a>
     <a href="guide.html" class="is-active">使い方</a>
@@ -35,32 +36,48 @@
     <h2 class="section__title section__title--green">目次</h2>
     <ul class="list">
       <li class="list-item"><a href="#home">① ホーム画面</a></li>
-      <li class="list-item"><a href="#goal">② 目標設定画面</a></li>
-      <li class="list-item"><a href="#timer">③ タイマー画面</a></li>
-      <li class="list-item"><a href="#record">④ 記録を手動で追加</a></li>
-      <li class="list-item"><a href="#export">⑤ データの書き出し</a></li>
-      <li class="list-item"><a href="#import">⑥ データの読み込み(インポート)</a></li>
-      <li class="list-item"><a href="#viewer">⑦ 他の人のデータを見る</a></li>
-      <li class="list-item"><a href="#reset">⑧ データを全て消したいとき</a></li>
-      <li class="list-item"><a href="#storage">⑨ データの保存場所について</a></li>
+      <li class="list-item"><a href="#calendar">② カレンダー</a></li>
+      <li class="list-item"><a href="#goal">③ 目標設定画面</a></li>
+      <li class="list-item"><a href="#timer">④ タイマー画面</a></li>
+      <li class="list-item"><a href="#record">⑤ 記録を手動で追加</a></li>
+      <li class="list-item"><a href="#export">⑥ データの書き出し</a></li>
+      <li class="list-item"><a href="#import">⑦ データの読み込み(インポート)</a></li>
+      <li class="list-item"><a href="#viewer">⑧ 他の人のデータを見る</a></li>
+      <li class="list-item"><a href="#reset">⑨ データを全て消したいとき</a></li>
+      <li class="list-item"><a href="#storage">⑩ データの保存場所について</a></li>
     </ul>
   </section>
 
   <!-- ホーム画面 -->
   <section class="section" id="home">
     <h2 class="section__title">① ホーム画面</h2>
-    <p>アプリを開いたときに最初に表示される画面です。次の3つが一覧できます。</p>
+    <p>アプリを開いたときに最初に表示される画面です。次の4つが一覧できます。</p>
     <ul>
       <li><strong>今日の目標</strong>: 目標設定画面で登録した、今日の目標が表示されます。</li>
       <li><strong>今日の勉強予定</strong>: To-Do形式の予定が表示され、クリックすると完了/未完了を切り替えられます。</li>
+      <li><strong>近い試験・締切</strong>: カレンダーに登録した試験・締切までの日数です(登録がなければ表示されません)。</li>
       <li><strong>勉強履歴</strong>: これまでに記録した勉強の一覧です。タイマーで記録したものには<span class="tag tag--timer">タイマー</span>、手動で追加したものには<span class="tag tag--manual">手動</span>、他のファイルから読み込んだものには<span class="tag tag--imported">インポート</span>のタグが付き、一目で区別できます。</li>
     </ul>
-    <p>画面上部のメニューから、目標設定・タイマー・使い方の各画面にいつでも移動できます。「STUDIES」のロゴをクリックすると、どの画面からでもホームに戻れます。</p>
+    <p>画面上部のメニューから、カレンダー・目標設定・タイマー・使い方の各画面にいつでも移動できます。「STUDIES」のロゴをクリックすると、どの画面からでもホームに戻れます。</p>
+  </section>
+
+  <!-- カレンダー -->
+  <section class="section" id="calendar">
+    <h2 class="section__title">② カレンダー</h2>
+    <p>月ごとのカレンダーで、予定や勉強の様子を確認できる画面です。</p>
+    <ul>
+      <li><strong>日付を選ぶ</strong>: 日付をクリックすると、その日の予定・目標・勉強履歴が下に表示されます。</li>
+      <li><strong>予定を追加・削除</strong>: 内容と種類(勉強予定／試験・締切／休み・予備)を選んで追加します。開始・終了時刻は入力しなくても大丈夫です。</li>
+      <li><strong>色分け</strong>: 予定の種類ごとに色が変わります(青: 勉強予定、赤: 試験・締切、グレー: 休み・予備)。</li>
+      <li><strong>勉強時間の濃さ</strong>: 勉強した時間が長い日ほど、日付マスの緑色が濃くなります。</li>
+      <li><strong>予定と実績</strong>: 選んだ日の「勉強予定の完了数」と「実際の勉強時間」が並んで表示されます。</li>
+    </ul>
+    <p>ホーム画面には、これから来る試験・締切が「あと◯日」と表示されます。</p>
   </section>
 
   <!-- 目標設定画面 -->
   <section class="section" id="goal">
-    <h2 class="section__title">② 目標設定画面</h2>
+    <h2 class="section__title">③ 目標設定画面</h2>
     <p>日付ごとに目標と勉強予定を管理する画面です。</p>
     <ul>
       <li><strong>対象の日付</strong>: 上部で日付を選ぶと、その日の目標・予定を確認/編集できます（初期状態では今日の日付）。</li>
@@ -76,7 +93,7 @@
 
   <!-- タイマー画面 -->
   <section class="section" id="timer">
-    <h2 class="section__title">③ タイマー画面</h2>
+    <h2 class="section__title">④ タイマー画面</h2>
     <p>勉強時間を計測するための画面です。</p>
     <ul>
       <li><strong>モード切り替え</strong>: 「カウントアップ(経過時間を計る)」と「カウントダウン(設定した時間から減っていく)」を切り替えられます。カウントダウンを選ぶと、時・分・秒を入力する欄が表示されます。</li>
@@ -88,7 +105,7 @@
 
   <!-- 手動記録 -->
   <section class="section" id="record">
-    <h2 class="section__title">④ 記録を手動で追加</h2>
+    <h2 class="section__title">⑤ 記録を手動で追加</h2>
     <p>
       タイマーを使わずに勉強した内容を、あとからまとめて記録したいときに使う画面です。
       ホーム画面の「勉強履歴」欄にある「記録を手動で追加する →」のリンクから移動できます。
@@ -98,7 +115,7 @@
 
   <!-- 書き出し -->
   <section class="section" id="export">
-    <h2 class="section__title">⑤ データの書き出し</h2>
+    <h2 class="section__title">⑥ データの書き出し</h2>
     <p>
       ホーム画面の「書き出し」から、記録をJSONファイルとしてダウンロードできます。他の端末に移したり、バックアップを取っておいたりするのに使えます。
     </p>
@@ -111,7 +128,7 @@
 
   <!-- インポート -->
   <section class="section" id="import">
-    <h2 class="section__title">⑥ データの読み込み(インポート)</h2>
+    <h2 class="section__title">⑦ データの読み込み(インポート)</h2>
     <p>
       ホーム画面の「読み込み」から、書き出しておいたJSONファイルを選ぶと、その内容がこの端末に取り込まれます。
     </p>
@@ -123,7 +140,7 @@
 
   <!-- viewer -->
   <section class="section" id="viewer">
-    <h2 class="section__title">⑦ 他の人のデータを見る</h2>
+    <h2 class="section__title">⑧ 他の人のデータを見る</h2>
     <p>
       友人など他の人から共有されたJSONファイルを、自分の記録と混ぜずに見たいときは「他の人のデータを見る」画面を使ってください。ホーム画面からリンクで移動できます。
     </p>
@@ -134,7 +151,7 @@
 
   <!-- reset -->
   <section class="section" id="reset">
-    <h2 class="section__title">⑧ データを全て消したいとき</h2>
+    <h2 class="section__title">⑨ データを全て消したいとき</h2>
     <p>
       目標設定画面の下部にある「データを全てリセットする」ボタンから、目標・勉強予定・勉強履歴をまとめて削除できます。
       押すと確認のダイアログが表示され、そこで「OK」を選んだ場合のみ削除が実行されます（誤操作防止のため、確認なしでは削除されません）。
@@ -146,7 +163,7 @@
 
   <!-- storage -->
   <section class="section" id="storage" style="border-bottom:none;">
-    <h2 class="section__title">⑨ データの保存場所について</h2>
+    <h2 class="section__title">⑩ データの保存場所について</h2>
     <p>
       STUDIESのデータは、サーバーやクラウドではなく、<strong>今使っているブラウザ内(localStorage)</strong>にのみ保存されます。そのため次の点にご注意ください。
     </p>

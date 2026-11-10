@@ -16,13 +16,24 @@ function generateId() {
   return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
 }
 
-// 今日の日付を "YYYY-MM-DD" 形式で取得
-function getTodayString() {
-  const d = new Date();
+// Dateを "YYYY-MM-DD" 形式に変換
+function toDateString(d) {
   const y = d.getFullYear();
   const m = String(d.getMonth() + 1).padStart(2, '0');
   const day = String(d.getDate()).padStart(2, '0');
   return `${y}-${m}-${day}`;
+}
+
+// 今日の日付を "YYYY-MM-DD" 形式で取得
+function getTodayString() {
+  return toDateString(new Date());
+}
+
+// 今日から指定日までの日数(今日=0、明日=1、昨日=-1)
+function daysUntil(dateString) {
+  const [y, m, d] = dateString.split('-').map(Number);
+  const [ty, tm, td] = getTodayString().split('-').map(Number);
+  return Math.round((Date.UTC(y, m - 1, d) - Date.UTC(ty, tm - 1, td)) / 86400000);
 }
 
 // 秒数を "HH:MM:SS" or "MM:SS" 形式に変換
@@ -42,6 +53,12 @@ function formatDuration(totalSeconds) {
 function formatDateJP(dateString) {
   const [y, m, d] = dateString.split('-');
   return `${y}年${Number(m)}月${Number(d)}日`;
+}
+
+function escapeHTML(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
 }
 
 /* ---------- localStorage 汎用read/write ---------- */
@@ -101,6 +118,15 @@ function deleteRecord(id) {
   saveRecords(records);
 }
 
+// 履歴の記録元(タイマー/手動)とインポートのタグ
+function recordTagsHTML(record) {
+  const source = record.source === 'timer'
+    ? '<span class="tag tag--timer">タイマー</span>'
+    : '<span class="tag tag--manual">手動</span>';
+  const imported = record.imported ? '<span class="tag tag--imported">インポート</span>' : '';
+  return source + imported;
+}
+
 /* ============================================================
    目標 (study_goals)
    構造: { [date]: [ { id, rangeStart, rangeEnd, memo }, ... ] }
@@ -146,10 +172,37 @@ function getTodayGoals() {
   return getGoalsByDate(getTodayString());
 }
 
+// 目標の範囲表記。終了が空なら開始のみ
+function formatGoalRange(goal) {
+  const start = goal.rangeStart || '?';
+  return goal.rangeEnd ? `${start} 〜 ${goal.rangeEnd}` : start;
+}
+
 /* ============================================================
    予定 / To-Do (study_schedule)
-   構造: [{ id, date, content, done }]
+   構造: [{ id, date, content, done, type, startTime, endTime }]
+   type未設定の既存データは 'study' として扱う。時刻は "HH:MM" で任意。
    ============================================================ */
+
+const SCHEDULE_TYPES = {
+  study: '勉強予定',
+  exam: '試験・締切',
+  rest: '休み・予備',
+};
+
+function getScheduleType(item) {
+  return Object.hasOwn(SCHEDULE_TYPES, item.type) ? item.type : 'study';
+}
+
+// 一覧表示用に、勉強予定以外の種類タグと時刻をHTMLにする
+function scheduleBadgeHTML(item) {
+  const type = getScheduleType(item);
+  const typeTag = type === 'study' ? '' : `<span class="tag tag--${type}">${SCHEDULE_TYPES[type]}</span>`;
+  const time = item.startTime
+    ? `<span class="schedule-time">${escapeHTML(item.startTime)}${item.endTime ? '–' + escapeHTML(item.endTime) : ''}</span>`
+    : '';
+  return typeTag + time;
+}
 
 function getSchedule() {
   return readStorage(STORAGE_KEYS.SCHEDULE, []);
@@ -159,13 +212,16 @@ function saveSchedule(schedule) {
   return writeStorage(STORAGE_KEYS.SCHEDULE, schedule);
 }
 
-function addScheduleItem({ date, content }) {
+function addScheduleItem({ date, content, type, startTime, endTime }) {
   const schedule = getSchedule();
   const item = {
     id: generateId(),
     date: date || getTodayString(),
     content,
     done: false,
+    type: Object.hasOwn(SCHEDULE_TYPES, type) ? type : 'study',
+    startTime: startTime || '',
+    endTime: endTime || '',
   };
   schedule.push(item);
   saveSchedule(schedule);
@@ -186,8 +242,20 @@ function deleteScheduleItem(id) {
   saveSchedule(schedule);
 }
 
+// 時刻のある予定を開始時刻順に先頭へ、時刻のない予定は登録順に後ろへ並べる
+function sortSchedule(items) {
+  return items.slice().sort((a, b) => {
+    if (a.startTime && b.startTime) {
+      return a.startTime < b.startTime ? -1 : a.startTime > b.startTime ? 1 : 0;
+    }
+    if (a.startTime) return -1;
+    if (b.startTime) return 1;
+    return 0;
+  });
+}
+
 function getScheduleByDate(date) {
-  return getSchedule().filter((s) => s.date === date);
+  return sortSchedule(getSchedule().filter((s) => s.date === date));
 }
 
 /* ============================================================

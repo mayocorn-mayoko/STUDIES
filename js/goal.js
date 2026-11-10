@@ -2,7 +2,8 @@
    goal.js - 目標設定画面ロジック
    ============================================================ */
 
-let currentDate = getTodayString();
+const queryDate = new URLSearchParams(location.search).get('date');
+let currentDate = /^\d{4}-\d{2}-\d{2}$/.test(queryDate || '') ? queryDate : getTodayString();
 
 document.addEventListener('DOMContentLoaded', () => {
   const dateInput = document.getElementById('target-date');
@@ -65,9 +66,7 @@ function renderGoalList() {
     const li = document.createElement('li');
     li.className = 'list-item';
     const importedTag = goal.imported ? '<span class="tag tag--imported">インポート</span> ' : '';
-    const rangeText = goal.rangeEnd
-      ? `${escapeHTML(goal.rangeStart)} 〜 ${escapeHTML(goal.rangeEnd)}`
-      : escapeHTML(goal.rangeStart);
+    const rangeText = escapeHTML(formatGoalRange(goal));
     li.innerHTML = `
       <div class="list-item__main">
         <span class="list-item__title">${importedTag}${rangeText}</span>
@@ -118,7 +117,7 @@ function renderSchedule() {
     li.innerHTML = `
       <div class="list-item__left">
         <span class="checkbox ${item.done ? 'is-checked' : ''}"></span>
-        <span class="list-item__title">${importedTag} ${escapeHTML(item.content)}</span>
+        <span class="list-item__title">${importedTag} ${scheduleBadgeHTML(item)} ${escapeHTML(item.content)}</span>
       </div>
       <button class="btn btn--small btn--danger" data-id="${item.id}">削除</button>
     `;
@@ -146,12 +145,4 @@ function onResetAllData() {
 
   renderGoalList();
   renderSchedule();
-}
-
-/* ---------- ユーティリティ ---------- */
-
-function escapeHTML(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
 }

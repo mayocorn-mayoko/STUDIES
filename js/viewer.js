@@ -76,9 +76,7 @@ function renderViewerGoals(goalsObj) {
       const li = document.createElement('li');
       li.className = 'list-item';
       const importedTag = goal.imported ? '<span class="tag tag--imported">インポート</span> ' : '';
-      const rangeText = goal.rangeEnd
-        ? `${escapeHTML(goal.rangeStart || '?')} 〜 ${escapeHTML(goal.rangeEnd)}`
-        : escapeHTML(goal.rangeStart || '?');
+      const rangeText = escapeHTML(formatGoalRange(goal));
       li.innerHTML = `
         <div class="list-item__main">
           <span class="list-item__title">${importedTag}${rangeText}</span>
@@ -114,7 +112,7 @@ function renderViewerSchedule(schedule) {
     const importedTag = item.imported ? '<span class="tag tag--imported">インポート</span> ' : '';
     li.innerHTML = `
       <div class="list-item__main">
-        <span class="list-item__title">${importedTag}${item.done ? '✓ ' : ''}${escapeHTML(item.content || '')}</span>
+        <span class="list-item__title">${importedTag}${item.done ? '✓ ' : ''}${scheduleBadgeHTML(item)} ${escapeHTML(item.content || '')}</span>
         <span class="list-item__meta">${formatDateJP(item.date)}</span>
       </div>
     `;
@@ -140,24 +138,12 @@ function renderViewerHistory(records) {
   items.forEach((r) => {
     const li = document.createElement('li');
     li.className = 'list-item';
-    const sourceTag = r.source === 'timer'
-      ? '<span class="tag tag--timer">タイマー</span>'
-      : '<span class="tag tag--manual">手動</span>';
-    const importedTag = r.imported ? '<span class="tag tag--imported">インポート</span>' : '';
     li.innerHTML = `
       <div class="list-item__main">
-        <span class="list-item__title">${sourceTag}${importedTag} ${escapeHTML(r.subject || '')} ${r.memo ? '- ' + escapeHTML(r.memo) : ''}</span>
+        <span class="list-item__title">${recordTagsHTML(r)} ${escapeHTML(r.subject || '')} ${r.memo ? '- ' + escapeHTML(r.memo) : ''}</span>
         <span class="list-item__meta">${formatDateJP(r.date)} ・ ${formatDuration(r.duration || 0)}</span>
       </div>
     `;
     listEl.appendChild(li);
   });
-}
-
-/* ---------- ユーティリティ ---------- */
-
-function escapeHTML(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
 }
