@@ -23,10 +23,10 @@ node server.js
 
 ```
 studies/
-├── index.html / goal.html / timer.html / record.html / export.html / viewer.html / guide.html
+├── index.html / calendar.html / goal.html / timer.html / record.html / export.html / viewer.html / guide.html
 ├── css/
 │   ├── common.css      デザイントークン(CSS変数)・ベーススタイル・タグ(.tag--*)の共通定義
-│   └── <page>.css      各ページ固有のスタイル
+│   └── <page>.css      各ページ固有のスタイル(必要なページのみ。index.htmlはcommon.cssのみ)
 ├── js/
 │   ├── common.js        localStorage操作・データ操作関数・ユーティリティ(全ページ共通で読み込む)
 │   └── <page>.js        各ページ固有のロジック(DOMContentLoadedでイベントバインド)
@@ -34,7 +34,7 @@ studies/
 └── package.json
 ```
 
-ページとスクリプトは1対1対応。共通処理は`common.js`に集約し、各ページは`<script src="js/common.js">`の後に自身の`<script src="js/<page>.js">`を読み込む構成。ビルドステップなし(ブラウザがそのまま解釈する)。
+ページとスクリプトは基本的に1対1対応(`guide.html`はスクリプトなし)。共通処理は`common.js`に集約し、各ページは`<script src="js/common.js">`の後に自身の`<script src="js/<page>.js">`を読み込む構成。ビルドステップなし(ブラウザがそのまま解釈する)。
 
 ## データモデル (localStorage)
 
@@ -78,6 +78,9 @@ type ScheduleItem = {
   date: string;
   content: string;
   done: boolean;
+  type?: "study" | "exam" | "rest";  // 無い/不正値は'study'扱い(getScheduleType)
+  startTime?: string;     // "HH:MM"。任意(空文字可)
+  endTime?: string;       // startTimeがある場合のみ意味を持つ
   imported?: true;
 };
 ```
@@ -92,7 +95,9 @@ type ScheduleItem = {
 - `readStorage(key, fallback)` / `writeStorage(key, value)`: JSON.parse/stringifyのラッパー。例外時は`fallback`を返す
 - 履歴: `getRecords` / `saveRecords` / `addRecord` / `deleteRecord`
 - 目標: `getAllGoals` / `getGoalsByDate` / `saveGoalsByDate` / `addGoal` / `deleteGoal` / `getTodayGoals`
-- 予定: `getSchedule` / `saveSchedule` / `addScheduleItem` / `toggleScheduleItem` / `deleteScheduleItem` / `getScheduleByDate`
+- 予定: `getSchedule` / `saveSchedule` / `addScheduleItem` / `toggleScheduleItem` / `deleteScheduleItem` / `getScheduleByDate`(開始時刻順→時刻なしは登録順に`sortSchedule`で整列)
+- 予定の種類: `SCHEDULE_TYPES` / `getScheduleType(item)` / `scheduleBadgeHTML(item)`(種類タグ+時刻のHTML)
+- 表示補助: `escapeHTML` / `formatGoalRange(goal)` / `recordTagsHTML(record)` / `toDateString(date)` / `daysUntil(dateString)`(今日からの日数。ローカル日付基準)
 - 全削除: `resetAllData()` — 3つのストレージキーを`removeItem`
 - 書き出し: `exportFilteredData({ startDate, endDate, includeGoals, includeSchedule, includeRecords })` / `downloadJSON(data, filename)` / `isDateInRange(date, start, end)`
 - 読み込み(自分のデータへ統合): `importAllData(file, onComplete)` — 既存データを**上書きせず追加**。取り込んだ全項目のidを`generateId()`で再採番し、`imported: true`を付与してから既存配列/オブジェクトにconcat/マージする
@@ -132,9 +137,19 @@ function getElapsedSeconds() {
 
 のパターンで対処している(`timer.css`参照)。新たに`hidden`属性と`display`を併用するクラスを追加する場合はこのパターンに倣うこと。
 
+### calendar.html / js/calendar.js
+
+- 月グリッドは日曜始まり。表示月の週数分(5〜6週)の`button.cal-cell`を生成し、前後月の日も`is-other`で表示する
+- 勉強時間のヒートマップ: 日付ごとの`records.duration`合計(分)を`HEAT_MINUTES`(1/30/90/180分)で段階1〜4にし、`data-heat`属性+`color-mix`で背景を変える
+- 予定チップは種類別クラス`cal-chip--{study|exam|rest}`で着色。1日に`MAX_CHIPS`(2)件まで表示し超過は`+N`
+- 選択日のパネルで予定の追加(種類・任意の時刻。終了<開始または開始なしの場合`endTime`は空にする)/完了切替/削除、目標・履歴の閲覧(目標の編集は`goal.html?date=YYYY-MM-DD`へ遷移)
+- 目標・履歴の追加/削除、繰り返し予定、週表示は未対応
+
 ### goal.html / js/goal.js
 
-- 目標は日付配列への追加のみ(1つの入力フォームが常にadd用)。`rangeStart`必須・`rangeEnd`任意で、空の場合はrender側で`〜`を付けない分岐がある(`index.js`・`goal.js`・`viewer.js`の3箇所に同一ロジックが重複しているので、変更時は3箇所とも直すこと)
+- クエリ`?date=YYYY-MM-DD`で対象日の初期値を指定できる(形式不正は今日)
+
+- 目標は日付配列への追加のみ(1つの入力フォームが常にadd用)。`rangeStart`必須・`rangeEnd`任意で、表示は`formatGoalRange`(終了が空なら`〜`を付けない)に集約している
 - `btn-reset-all`から`resetAllData()`を呼ぶ。`confirm()`でガードしており、キャンセル時は何もしない
 
 ### export.html / js/export.js
@@ -151,12 +166,12 @@ function getElapsedSeconds() {
 
 ## タグ表示の一元化
 
-`.tag--timer` / `.tag--manual` / `.tag--imported`は`common.css`で定義している。各ページのCSSで個別に再定義すると、そのスタイルを読み込んでいない別ページ(例: `viewer.html`)で表示が崩れるため、再定義せず`common.css`に一元化すること。新しいタグ種別を追加する場合も同様に`common.css`に追加する。
+`.tag--timer` / `.tag--manual` / `.tag--imported` / `.tag--exam` / `.tag--rest`は`common.css`で定義している。各ページのCSSで個別に再定義すると、そのスタイルを読み込んでいない別ページ(例: `viewer.html`)で表示が崩れるため、再定義せず`common.css`に一元化すること。新しいタグ種別を追加する場合も同様に`common.css`に追加する。
 
 ## 既知の制約・今後の拡張余地
 
 - 目標達成判定(目標と実績の自動突き合わせ)は未実装
-- 勉強予定はTo-Do形式のみ。時間指定でのカレンダー管理は未実装(データモデル上は`date`のみで時刻情報を持たない)
+- カレンダーは試行実装。繰り返し予定・週/日表示・科目別の色分けは未実装。予定の時刻は表示用で、重複チェックはしない
 - マルチユーザー・サーバー同期なし。端末間共有は書き出し/読み込み(JSONファイル経由)が前提
 - `server.js`はローカル開発用の簡易配信サーバーであり、本番運用(HTTPS・認証・キャッシュ制御等)は考慮していない
 
